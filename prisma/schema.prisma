@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  checkIns  CheckIn[]
+  snapshots Snapshot[]
+}
+
+model CheckIn {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  date        DateTime  @default(now())
+
+  tokensM     Float     // daily AI tokens in millions
+  sleepHrs    Float     // hours of sleep
+  burnStreak  Int       // exercise streak in days
+  deepWorkHrs Float     // hours of deep work
+  learnPages  Int       // pages read today
+  cleanMeals  Int       // clean meals today (0-5)
+
+  snapshot    Snapshot?
+}
+
+model Snapshot {
+  id        String   @id // nanoid short ID for share URLs
+  checkInId String   @unique
+  checkIn   CheckIn  @relation(fields: [checkInId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
