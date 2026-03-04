@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   });
 
   const res = NextResponse.json({ ok: true, checkInId: checkIn.id });
-  res.cookies.set("uid", userId, {
+  res.cookies.set("uid", userId!, {
     httpOnly: true,
     maxAge: 60 * 60 * 24 * 365,
     path: "/",
