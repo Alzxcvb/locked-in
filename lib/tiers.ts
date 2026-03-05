@@ -62,7 +62,7 @@ export const METRICS: MetricConfig[] = [
       },
       {
         min: 0,
-        tier: { label: "Scattered", emoji: "📱", score: 10, color: TIER_COLORS.low },
+        tier: { label: "Scattered", emoji: "📱", score: 0, color: TIER_COLORS.low },
       },
     ],
   },
@@ -93,7 +93,7 @@ export const METRICS: MetricConfig[] = [
       },
       {
         min: 0,
-        tier: { label: "Just Starting", emoji: "🌱", score: 20, color: TIER_COLORS.low },
+        tier: { label: "Just Starting", emoji: "🌱", score: 0, color: TIER_COLORS.low },
       },
     ],
   },
@@ -124,7 +124,7 @@ export const METRICS: MetricConfig[] = [
       },
       {
         min: 0,
-        tier: { label: "Off Today", emoji: "💤", score: 5, color: TIER_COLORS.low },
+        tier: { label: "Off Today", emoji: "💤", score: 0, color: TIER_COLORS.low },
       },
     ],
   },
@@ -155,7 +155,7 @@ export const METRICS: MetricConfig[] = [
       },
       {
         min: 0,
-        tier: { label: "Rest Day", emoji: "🛋️", score: 10, color: TIER_COLORS.base },
+        tier: { label: "Rest Day", emoji: "🛋️", score: 0, color: TIER_COLORS.base },
       },
     ],
   },
@@ -182,7 +182,7 @@ export const METRICS: MetricConfig[] = [
       },
       {
         min: 0,
-        tier: { label: "Cheat Day", emoji: "🍕", score: 10, color: TIER_COLORS.low },
+        tier: { label: "Cheat Day", emoji: "🍕", score: 0, color: TIER_COLORS.low },
       },
     ],
   },
@@ -228,5 +228,5 @@ export function getOverallTier(data: CheckInData): OverallTier {
   if (avg >= 70) return { label: "Dialed In", emoji: "⚡", score: avg, color: "text-purple-400" };
   if (avg >= 50) return { label: "Getting There", emoji: "📈", score: avg, color: "text-blue-400" };
   if (avg >= 30) return { label: "Touch Grass Mode", emoji: "🌿", score: avg, color: "text-green-400" };
-  return { label: "Log Off", emoji: "📴", score: avg, color: "text-zinc-400" };
+  return { label: "Quiet Quitting", emoji: "🪑", score: avg, color: "text-zinc-400" };
 }
