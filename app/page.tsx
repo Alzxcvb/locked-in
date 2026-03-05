@@ -24,17 +24,37 @@ export default function Home() {
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [name, setName] = useState("");
+  const [editingName, setEditingName] = useState(false);
+  const [nameLoaded, setNameLoaded] = useState(false);
 
   useEffect(() => {
     fetch("/api/checkin")
       .then((r) => r.json())
       .then(({ checkIns }) => setHistory(checkIns ?? []));
+
+    fetch("/api/user")
+      .then((r) => r.json())
+      .then(({ name }) => {
+        if (name) setName(name);
+        else setEditingName(true); // prompt on first visit
+        setNameLoaded(true);
+      });
   }, []);
 
   const overall = getOverallTier(data);
 
   function update(key: MetricKey, val: number) {
     setData((prev) => ({ ...prev, [key]: val }));
+  }
+
+  async function saveName() {
+    await fetch("/api/user", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    setEditingName(false);
   }
 
   async function handleSave() {
@@ -72,11 +92,45 @@ export default function Home() {
     <div className="min-h-screen bg-zinc-950 text-white">
       <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-8">
           <h1 className="text-5xl font-black tracking-tight mb-2">
             🔐 Locked In
           </h1>
-          <p className="text-zinc-400">How locked in are you today?</p>
+
+          {/* Name section */}
+          {nameLoaded && (
+            <div className="mt-3">
+              {editingName ? (
+                <div className="flex items-center justify-center gap-2">
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && saveName()}
+                    placeholder="Your name"
+                    maxLength={40}
+                    autoFocus
+                    className="bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 w-48"
+                  />
+                  <button
+                    onClick={saveName}
+                    className="bg-violet-600 hover:bg-violet-500 px-3 py-2 rounded-xl text-sm font-bold transition-colors"
+                  >
+                    Save
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setEditingName(true)}
+                  className="text-zinc-400 hover:text-white text-sm transition-colors"
+                >
+                  {name ? `👤 ${name}` : "＋ Add your name"}
+                </button>
+              )}
+            </div>
+          )}
+
+          <p className="text-zinc-500 text-sm mt-3">How locked in are you today?</p>
         </div>
 
         {/* Live overall score */}
@@ -119,7 +173,7 @@ export default function Home() {
           <div className="space-y-4">
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col items-center gap-4">
               <p className="text-green-400 font-bold">✓ Saved!</p>
-              <LockedInCard data={data} overall={overall} />
+              <LockedInCard data={data} overall={overall} name={name || null} />
             </div>
             {!shareUrl ? (
               <button
