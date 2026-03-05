@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { METRICS, getTier, getOverallTier, CheckInData, MetricKey } from "@/lib/tiers";
 import MetricCard from "@/components/MetricCard";
 import LockedInCard from "@/components/LockedInCard";
@@ -27,6 +28,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [editingName, setEditingName] = useState(false);
   const [nameLoaded, setNameLoaded] = useState(false);
+  const [leaderboardOptIn, setLeaderboardOptIn] = useState(false);
 
   useEffect(() => {
     fetch("/api/checkin")
@@ -35,12 +37,23 @@ export default function Home() {
 
     fetch("/api/user")
       .then((r) => r.json())
-      .then(({ name }) => {
+      .then(({ name, leaderboardOptIn }) => {
         if (name) setName(name);
-        else setEditingName(true); // prompt on first visit
+        else setEditingName(true);
+        setLeaderboardOptIn(leaderboardOptIn ?? false);
         setNameLoaded(true);
       });
   }, []);
+
+  async function toggleLeaderboard() {
+    const next = !leaderboardOptIn;
+    setLeaderboardOptIn(next);
+    await fetch("/api/user", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ leaderboardOptIn: next }),
+    });
+  }
 
   const overall = getOverallTier(data);
 
@@ -231,6 +244,32 @@ export default function Home() {
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {/* Leaderboard section */}
+        {nameLoaded && (
+          <div className="mt-10 pt-8 border-t border-zinc-800 flex items-center justify-between">
+            <div>
+              <Link
+                href="/leaderboard"
+                className="text-white font-bold hover:text-violet-400 transition-colors"
+              >
+                🏆 Leaderboard →
+              </Link>
+              <p className="text-xs text-zinc-600 mt-0.5">See how others are doing</p>
+            </div>
+            <button
+              onClick={toggleLeaderboard}
+              className={`flex items-center gap-2 text-sm px-3 py-2 rounded-xl border transition-colors ${
+                leaderboardOptIn
+                  ? "bg-violet-600/20 border-violet-500/40 text-violet-300"
+                  : "bg-zinc-900 border-zinc-700 text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${leaderboardOptIn ? "bg-violet-400" : "bg-zinc-600"}`} />
+              {leaderboardOptIn ? "Showing on board" : "Join leaderboard"}
+            </button>
           </div>
         )}
       </div>
