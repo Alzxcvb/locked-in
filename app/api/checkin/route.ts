@@ -4,9 +4,8 @@ import { db } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { tokensM, sleepHrs, burnStreak, deepWorkHrs, learnPages, cleanMeals } = body;
+  const { tokensM, burnStreak, deepWorkHrs, learnPages, cleanMeals } = body;
 
-  // Get or create anonymous user ID from cookie
   const cookieStore = await cookies();
   let userId = cookieStore.get("uid")?.value;
 
@@ -14,7 +13,6 @@ export async function POST(req: NextRequest) {
     const user = await db.user.create({ data: {} });
     userId = user.id;
   } else {
-    // Ensure user exists
     const existing = await db.user.findUnique({ where: { id: userId } });
     if (!existing) {
       const user = await db.user.create({ data: { id: userId } });
@@ -23,7 +21,7 @@ export async function POST(req: NextRequest) {
   }
 
   const checkIn = await db.checkIn.create({
-    data: { userId, tokensM, sleepHrs, burnStreak, deepWorkHrs, learnPages, cleanMeals },
+    data: { userId, tokensM, burnStreak, deepWorkHrs, learnPages, cleanMeals },
   });
 
   const res = NextResponse.json({ ok: true, checkInId: checkIn.id });
