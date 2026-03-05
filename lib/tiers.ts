@@ -67,21 +67,21 @@ export const METRICS: MetricConfig[] = [
     key: "sleepHrs",
     label: "Sleep",
     unit: "hrs / night",
-    description: "Hours of sleep last night",
-    max: 12,
+    description: "Hours of sleep last night (target: 7–9)",
+    max: 9,
     step: 0.5,
     tiers: [
       {
-        min: 7.5,
+        min: 7,
         tier: { label: "Fully Recharged", emoji: "🛡️", score: 100, color: TIER_COLORS.god },
       },
       {
-        min: 6.5,
-        tier: { label: "Adequate Sleep", emoji: "😴", score: 75, color: TIER_COLORS.high },
+        min: 6,
+        tier: { label: "Adequate Sleep", emoji: "😴", score: 65, color: TIER_COLORS.high },
       },
       {
-        min: 5.5,
-        tier: { label: "Sleep Deprived", emoji: "😮‍💨", score: 40, color: TIER_COLORS.mid },
+        min: 5,
+        tier: { label: "Sleep Deprived", emoji: "😮‍💨", score: 35, color: TIER_COLORS.mid },
       },
       {
         min: 0,
