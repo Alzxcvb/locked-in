@@ -7,15 +7,17 @@ export type Tier = {
 
 export type MetricKey =
   | "tokensM"
-  | "sleepHrs"
   | "burnStreak"
   | "deepWorkHrs"
   | "learnPages"
   | "cleanMeals";
 
+export type Category = "Earn" | "Learn" | "Burn" | "Fuel";
+
 export type MetricConfig = {
   key: MetricKey;
   label: string;
+  category: Category;
   unit: string;
   description: string;
   max: number;
@@ -34,94 +36,9 @@ const TIER_COLORS = {
 
 export const METRICS: MetricConfig[] = [
   {
-    key: "tokensM",
-    label: "AI Tokens",
-    unit: "M / day",
-    description: "Daily AI token usage in millions",
-    max: 300,
-    step: 1,
-    tiers: [
-      {
-        min: 300,
-        tier: { label: "Cracked Engineer", emoji: "🔥", score: 100, color: TIER_COLORS.god },
-      },
-      {
-        min: 100,
-        tier: { label: "Staff Engineer", emoji: "⚡", score: 80, color: TIER_COLORS.elite },
-      },
-      {
-        min: 10,
-        tier: { label: "Senior Engineer", emoji: "💪", score: 60, color: TIER_COLORS.high },
-      },
-      {
-        min: 1,
-        tier: { label: "Getting There", emoji: "📈", score: 40, color: TIER_COLORS.mid },
-      },
-      {
-        min: 0,
-        tier: { label: "Just Starting", emoji: "🌱", score: 20, color: TIER_COLORS.low },
-      },
-    ],
-  },
-  {
-    key: "sleepHrs",
-    label: "Sleep",
-    unit: "hrs / night",
-    description: "Hours of sleep last night (target: 7–9)",
-    max: 9,
-    step: 0.5,
-    tiers: [
-      {
-        min: 7,
-        tier: { label: "Fully Recharged", emoji: "🛡️", score: 100, color: TIER_COLORS.god },
-      },
-      {
-        min: 6,
-        tier: { label: "Adequate Sleep", emoji: "😴", score: 65, color: TIER_COLORS.high },
-      },
-      {
-        min: 5,
-        tier: { label: "Sleep Deprived", emoji: "😮‍💨", score: 35, color: TIER_COLORS.mid },
-      },
-      {
-        min: 0,
-        tier: { label: "Running on Fumes", emoji: "💀", score: 15, color: TIER_COLORS.low },
-      },
-    ],
-  },
-  {
-    key: "burnStreak",
-    label: "Burn Streak",
-    unit: "days",
-    description: "Consecutive days you've worked out (best streak this month)",
-    max: 31,
-    step: 1,
-    tiers: [
-      {
-        min: 20,
-        tier: { label: "Untouchable", emoji: "🏆", score: 100, color: TIER_COLORS.god },
-      },
-      {
-        min: 10,
-        tier: { label: "Burning It Up", emoji: "🔥", score: 80, color: TIER_COLORS.elite },
-      },
-      {
-        min: 5,
-        tier: { label: "Consistent", emoji: "💪", score: 60, color: TIER_COLORS.high },
-      },
-      {
-        min: 1,
-        tier: { label: "Getting Started", emoji: "👟", score: 30, color: TIER_COLORS.mid },
-      },
-      {
-        min: 0,
-        tier: { label: "Rest Day", emoji: "🛋️", score: 10, color: TIER_COLORS.base },
-      },
-    ],
-  },
-  {
     key: "deepWorkHrs",
     label: "Deep Work",
+    category: "Earn",
     unit: "hrs / day",
     description: "Hours of focused, uninterrupted work today",
     max: 12,
@@ -150,8 +67,40 @@ export const METRICS: MetricConfig[] = [
     ],
   },
   {
+    key: "tokensM",
+    label: "AI Tokens",
+    category: "Earn",
+    unit: "M / day",
+    description: "Daily AI token usage in millions",
+    max: 300,
+    step: 1,
+    tiers: [
+      {
+        min: 300,
+        tier: { label: "Cracked Engineer", emoji: "🔥", score: 100, color: TIER_COLORS.god },
+      },
+      {
+        min: 100,
+        tier: { label: "Staff Engineer", emoji: "⚡", score: 80, color: TIER_COLORS.elite },
+      },
+      {
+        min: 10,
+        tier: { label: "Senior Engineer", emoji: "💪", score: 60, color: TIER_COLORS.high },
+      },
+      {
+        min: 1,
+        tier: { label: "Getting There", emoji: "📈", score: 40, color: TIER_COLORS.mid },
+      },
+      {
+        min: 0,
+        tier: { label: "Just Starting", emoji: "🌱", score: 20, color: TIER_COLORS.low },
+      },
+    ],
+  },
+  {
     key: "learnPages",
     label: "Learning",
+    category: "Learn",
     unit: "pages / day",
     description: "Pages read or equivalent learning units today",
     max: 100,
@@ -180,28 +129,56 @@ export const METRICS: MetricConfig[] = [
     ],
   },
   {
-    key: "cleanMeals",
-    label: "Diet",
-    unit: "clean meals (0–5)",
-    description: "How many meals today were clean / on plan",
-    max: 5,
+    key: "burnStreak",
+    label: "Burn Streak",
+    category: "Burn",
+    unit: "days",
+    description: "Consecutive days you've worked out",
+    max: 31,
     step: 1,
     tiers: [
       {
+        min: 20,
+        tier: { label: "Untouchable", emoji: "🏆", score: 100, color: TIER_COLORS.god },
+      },
+      {
+        min: 10,
+        tier: { label: "Burning It Up", emoji: "🔥", score: 80, color: TIER_COLORS.elite },
+      },
+      {
         min: 5,
+        tier: { label: "Consistent", emoji: "💪", score: 60, color: TIER_COLORS.high },
+      },
+      {
+        min: 1,
+        tier: { label: "Getting Started", emoji: "👟", score: 30, color: TIER_COLORS.mid },
+      },
+      {
+        min: 0,
+        tier: { label: "Rest Day", emoji: "🛋️", score: 10, color: TIER_COLORS.base },
+      },
+    ],
+  },
+  {
+    key: "cleanMeals",
+    label: "Fuel",
+    category: "Fuel",
+    unit: "clean meals (0–3)",
+    description: "How many meals today were clean — 3 is optimal",
+    max: 3,
+    step: 1,
+    tiers: [
+      {
+        min: 3,
         tier: { label: "Clean Machine", emoji: "🥗", score: 100, color: TIER_COLORS.god },
       },
       {
-        min: 4,
-        tier: { label: "Pretty Locked", emoji: "✅", score: 80, color: TIER_COLORS.elite },
-      },
-      {
-        min: 3,
-        tier: { label: "Balanced", emoji: "⚖️", score: 60, color: TIER_COLORS.high },
-      },
-      {
         min: 2,
-        tier: { label: "Slipping", emoji: "😬", score: 35, color: TIER_COLORS.mid },
+        tier: { label: "Pretty Locked", emoji: "✅", score: 70, color: TIER_COLORS.high },
+      },
+      {
+        min: 1,
+        tier: { label: "Getting There", emoji: "⚖️", score: 40, color: TIER_COLORS.mid },
       },
       {
         min: 0,
@@ -210,6 +187,15 @@ export const METRICS: MetricConfig[] = [
     ],
   },
 ];
+
+export const CATEGORY_ORDER: Category[] = ["Earn", "Learn", "Burn", "Fuel"];
+
+export const CATEGORY_LABELS: Record<Category, { emoji: string; color: string }> = {
+  Earn: { emoji: "💰", color: "text-amber-400" },
+  Learn: { emoji: "📖", color: "text-blue-400" },
+  Burn: { emoji: "🔥", color: "text-red-400" },
+  Fuel: { emoji: "🥗", color: "text-green-400" },
+};
 
 export function getTier(key: MetricKey, value: number): Tier {
   const metric = METRICS.find((m) => m.key === key)!;
@@ -221,7 +207,6 @@ export function getTier(key: MetricKey, value: number): Tier {
 
 export type CheckInData = {
   tokensM: number;
-  sleepHrs: number;
   burnStreak: number;
   deepWorkHrs: number;
   learnPages: number;
