@@ -3,15 +3,19 @@ import { CheckInData, METRICS, OverallTier, getTier } from "@/lib/tiers";
 type Props = {
   data: CheckInData;
   overall: OverallTier;
+  name?: string | null;
   date?: string;
   shareUrl?: string;
 };
 
-export default function LockedInCard({ data, overall, date, shareUrl }: Props) {
+export default function LockedInCard({ data, overall, name, date, shareUrl }: Props) {
   return (
     <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-8 max-w-md w-full shadow-2xl">
       {/* Header */}
       <div className="text-center mb-6">
+        {name && (
+          <p className="text-white font-bold text-base mb-0.5">{name}</p>
+        )}
         <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">
           {date ?? "Today"}
         </p>
