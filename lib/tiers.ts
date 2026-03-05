@@ -38,7 +38,7 @@ export const METRICS: MetricConfig[] = [
     label: "AI Tokens",
     unit: "M / day",
     description: "Daily AI token usage in millions",
-    max: 400,
+    max: 300,
     step: 1,
     tiers: [
       {
