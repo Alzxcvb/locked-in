@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { METRICS, getTier, getOverallTier, CheckInData, MetricKey } from "@/lib/tiers";
+import { METRICS, getTier, getOverallTier, CheckInData, MetricKey, CATEGORY_ORDER, CATEGORY_LABELS } from "@/lib/tiers";
 import MetricCard from "@/components/MetricCard";
 import LockedInCard from "@/components/LockedInCard";
 
 const DEFAULTS: CheckInData = {
   tokensM: 0,
-  sleepHrs: 7,
   burnStreak: 0,
   deepWorkHrs: 0,
   learnPages: 0,
-  cleanMeals: 3,
+  cleanMeals: 0,
 };
 
 type HistoryItem = CheckInData & { id: string; date: string };
@@ -160,17 +159,30 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Metric sliders */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          {METRICS.map((m) => (
-            <MetricCard
-              key={m.key}
-              metric={m}
-              value={data[m.key]}
-              tier={getTier(m.key, data[m.key])}
-              onChange={(val) => update(m.key, val)}
-            />
-          ))}
+        {/* Metrics grouped by Earn / Learn / Burn / Fuel */}
+        <div className="space-y-6 mb-8">
+          {CATEGORY_ORDER.map((cat) => {
+            const catMetrics = METRICS.filter((m) => m.category === cat);
+            const { emoji, color } = CATEGORY_LABELS[cat];
+            return (
+              <div key={cat}>
+                <p className={`text-xs font-bold uppercase tracking-widest mb-3 ${color}`}>
+                  {emoji} {cat}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {catMetrics.map((m) => (
+                    <MetricCard
+                      key={m.key}
+                      metric={m}
+                      value={data[m.key]}
+                      tier={getTier(m.key, data[m.key])}
+                      onChange={(val) => update(m.key, val)}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Actions */}
