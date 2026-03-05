@@ -23,7 +23,7 @@ model CheckIn {
   date        DateTime  @default(now())
 
   tokensM     Float     // daily AI tokens in millions
-  sleepHrs    Float     // hours of sleep
+  sleepHrs    Float?    // hours of sleep (deprecated, kept for old records)
   burnStreak  Int       // exercise streak in days
   deepWorkHrs Float     // hours of deep work
   learnPages  Int       // pages read today
